@@ -183,15 +183,4 @@ streetview_pipeline/
     ├── __init__.py
     ├── logger.py             # Logging setup
     └── naming.py             # Safe filename generation
-```
 
----
-
-## Legal Notice
-
-This tool downloads publicly accessible Street View imagery for research
-and data generation purposes. Usage is subject to Google's Terms of Service:
-<https://cloud.google.com/maps-platform/terms>
-
-Do not redistribute downloaded imagery commercially without appropriate
-licensing from Google.
