@@ -98,16 +98,6 @@ python main.py \
 --locations locations.csv \
 --dry-run
 
-output/
-│
-├── images/
-│   ├── India_Gate.jpg
-│   ├── Gateway_of_India.jpg
-│
-├── metadata.csv
-├── failed.csv
-└── pipeline.log
-
 **Dataset Applications**
 Identity Resolution
 Duplicate detection
@@ -132,4 +122,4 @@ Zoom Level	Resolution	Tiles
 2	2048 × 1024	8
 3	4096 × 2048	32
 4	8192 × 4096	128
-5	16384 × 8192	512
+5	16384 × 8192 512
