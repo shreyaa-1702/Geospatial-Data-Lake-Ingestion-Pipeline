@@ -12,7 +12,6 @@ The pipeline automates:
 
 This project can be used to create large-scale datasets for Face Recognition, Identity Resolution, Geospatial AI, Autonomous Navigation, Computer Vision, Digital Twins, Mapping & Localization, Smart City Analytics
 
-
 **Architecture**
 Locations CSV
       ▼
@@ -67,13 +66,12 @@ streetview_pipeline/
     ├── failed.csv
     └── pipeline.log
 
-**Installation**
+**Installation:**
 Clone the repository:
 git clone https://github.com/yourusername/streetview-pipeline.git
 cd streetview-pipeline
 
 **Install dependencies:**
-
 pip install -r requirements.txt
 Input Dataset Format
 Create a CSV file containing locations: name,address
