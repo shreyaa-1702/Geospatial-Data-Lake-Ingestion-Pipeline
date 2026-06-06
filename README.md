@@ -12,6 +12,7 @@ The pipeline automates:
 
 This project can be used to create large-scale datasets for Face Recognition, Identity Resolution, Geospatial AI, Autonomous Navigation, Computer Vision, Digital Twins, Mapping & Localization, Smart City Analytics
 
+
 **Architecture**
 Locations CSV
       ▼
@@ -28,7 +29,6 @@ Tile Downloader
 Image Stitching
       ▼
 Metadata Generation
-      │
       ├────────► metadata.csv
       │
       ├────────► failed.csv
