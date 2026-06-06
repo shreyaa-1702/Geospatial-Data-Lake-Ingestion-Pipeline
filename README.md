@@ -1,180 +1,36 @@
-# Geospatial-Data-Lake-Ingestion-Pipeline
-Production-ready geospatial data engineering pipeline that automatically converts location datasets into stitched Google Street View 360° panoramas with metadata generation, fault tolerance, concurrency, and configurable workflows for machine learning and computer vision applications.
-# Street View 360° Data Pipeline
+# Street View 360° Panorama Pipeline
 
-### Automated Geospatial Dataset Generation for Computer Vision & AI
-
-![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![MLOps](https://img.shields.io/badge/MLOps-Pipeline-green)
-![Data Engineering](https://img.shields.io/badge/Data%20Engineering-ETL-orange)
-![Computer Vision](https://img.shields.io/badge/Computer%20Vision-Dataset-red)
-
----
-
-## Overview
-
-Street View 360° Data Pipeline is a production-ready geospatial data engineering system that transforms location datasets into high-resolution Google Street View panorama datasets.
-
-The pipeline automates:
-
-- Address ingestion
-- Geocoding
-- Panorama discovery
-- Tile downloading
-- Image stitching
-- Metadata generation
-- Failure handling
-- Dataset export
-
-This project enables large-scale dataset creation for:
-
-- Face Recognition
-- Identity Resolution
-- Geospatial AI
-- Autonomous Navigation
-- Digital Twins
-- Smart City Analytics
-- Computer Vision Applications
-- Mapping & Localization
-
----
-
-## Architecture
-
-```text
-Locations CSV
-      │
-      ▼
-Address Loader
-      │
-      ▼
-Geocoder
-(Google Maps / OSM)
-      │
-      ▼
-Panorama Discovery
-      │
-      ▼
-Tile Downloader
-(Multi-threaded)
-      │
-      ▼
-Image Stitching
-      │
-      ▼
-Metadata Generation
-      │
-      ├────────► metadata.csv
-      ├────────► failed.csv
-      └────────► Panorama Images
-```
+Automated bulk downloader that converts a CSV of location names into stitched
+360° equirectangular JPEG panoramas + a metadata CSV — ready for CV datasets,
+digital twins, street-level mapping, and 3D reconstruction pipelines.
 
 ---
 
 ## Features
 
-### Data Engineering
-
-- Automated ETL workflow
-- Batch processing of thousands of locations
-- Structured metadata generation
-- CSV-based ingestion
-- Configurable execution using YAML
-- Standardized output datasets
-
-### MLOps & Reliability
-
-- Retry mechanisms with exponential backoff
-- Resume interrupted jobs
-- Structured logging
-- Failure tracking
-- Reproducible pipeline execution
-- Production-ready configuration management
-
-### Performance Optimization
-
-- Multi-threaded tile downloads
-- Parallel panorama processing
-- Optimized image stitching
-- High-resolution image generation
-
-### Computer Vision Dataset Creation
-
-- Street-level imagery collection
-- Geospatial metadata enrichment
-- Scalable dataset generation
-- Support for downstream ML workflows
+| | |
+|---|---|
+| 🗺️ **Geocoding** | Google Geocoding API or free Nominatim (OSM) fallback |
+| 📍 **Pano lookup** | Official Street View Metadata API or unofficial fallback (no key required) |
+| ⚡ **Concurrent tiles** | ThreadPoolExecutor — 8× faster than sequential |
+| 🔁 **Retry + backoff** | Exponential backoff on 503 / timeout |
+| 📄 **Metadata CSV** | name, street, lat/lng, pano_id, file size, date, status |
+| ↷ **Resume mode** | Skip already-downloaded images on interrupted runs |
+| 🔍 **Dry-run mode** | Geocode + find panos, write CSV, no image downloads |
+| 🪵 **Structured logging** | Console + rotating log file |
+| ⚙️ **YAML config** | All settings in one file; CLI flags override |
 
 ---
 
-## Tech Stack
+## Quick Start
 
-| Category | Technologies |
-|-----------|-------------|
-| Programming Language | Python |
-| Data Processing | Pandas |
-| Geocoding | Google Geocoding API, OpenStreetMap |
-| Street View Data | Google Street View APIs |
-| Concurrency | ThreadPoolExecutor |
-| Configuration | YAML |
-| Logging | Python Logging |
-| Image Processing | Pillow (PIL) |
-| Data Engineering | ETL Pipelines |
-| MLOps | Pipeline Automation |
-
----
-
-## Project Structure
-
-```text
-streetview_pipeline/
-│
-├── main.py
-├── config.py
-├── config.yaml
-├── requirements.txt
-│
-├── pipeline/
-│   ├── loader.py
-│   ├── geocoder.py
-│   ├── pano_finder.py
-│   ├── downloader.py
-│   ├── stitcher.py
-│   └── exporter.py
-│
-├── utils/
-│   ├── logger.py
-│   └── helpers.py
-│
-└── output/
-    ├── images/
-    ├── metadata.csv
-    ├── failed.csv
-    └── logs/
-```
-
----
-
-## Installation
-
-Clone the repository:
-
-```bash
-git clone https://github.com/<your-username>/streetview-pipeline.git
-cd streetview-pipeline
-```
-
-Install dependencies:
+### 1 — Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## Input Dataset Format
-
-Example CSV:
+### 2 — Prepare your locations CSV
 
 ```csv
 name,address
@@ -182,144 +38,160 @@ India Gate,India Gate Rajpath New Delhi India
 Gateway of India,Apollo Bandar Colaba Mumbai India
 ```
 
-### Required Columns
+Columns:
+- `name` *(required)* — Label for the image filename and CSV row.
+- `address` *(required)* — Any geocodable address string.
+- `pano_id` *(optional)* — Supply a known pano ID to skip geocoding + pano-lookup.
 
-| Column | Description |
-|----------|------------|
-| name | Location label |
-| address | Address to geocode |
-
-### Optional Columns
-
-| Column | Description |
-|----------|------------|
-| pano_id | Existing panorama ID |
-
----
-
-## Usage
-
-### Basic Execution
+### 3 — Run
 
 ```bash
+# No API key (uses free OpenStreetMap geocoding + unofficial pano lookup):
 python main.py --locations locations.csv
+
+# With Google API key (recommended — more reliable):
+python main.py --locations locations.csv --api-key YOUR_KEY
+
+# High-res (8192×4096 px), resumable:
+python main.py --locations locations.csv --zoom 4 --resume
 ```
 
-### With API Key
+### 4 — Outputs
 
-```bash
-python main.py \
---locations locations.csv \
---api-key YOUR_API_KEY
 ```
-
-### High-Resolution Export
-
-```bash
-python main.py \
---locations locations.csv \
---zoom 4
-```
-
-### Resume Interrupted Run
-
-```bash
-python main.py \
---locations locations.csv \
---resume
-```
-
-### Dry Run
-
-```bash
-python main.py \
---locations locations.csv \
---dry-run
-```
-
----
-
-## Output
-
-```text
 output/
-│
 ├── images/
 │   ├── India_Gate.jpg
 │   ├── Gateway_of_India.jpg
-│
-├── metadata.csv
-├── failed.csv
+│   └── ...
+├── metadata.csv        ← all records
+├── failed.csv          ← only failures (for reprocessing)
 └── pipeline.log
 ```
 
 ---
 
-## Metadata Schema
+## CLI Reference
 
-| Field | Description |
-|---------|------------|
-| name | Location name |
-| address | Original address |
-| latitude | Latitude |
-| longitude | Longitude |
-| pano_id | Panorama ID |
-| capture_date | Street View capture date |
-| image_path | Saved image location |
-| file_size | Image file size |
-| status | Success / Failure |
-=
+```
+python main.py [OPTIONS]
 
-## Applications
+Required:
+  -l, --locations FILE   Locations CSV or TXT file
 
-### Geospatial AI
-
-- Urban intelligence
-- Mapping systems
-- Smart city analytics
-
-### Computer Vision
-
-- Scene understanding
-- Visual localization
-- Object detection datasets
-
-### Identity Resolution
-
-- Duplicate detection
-- Address intelligence
-- Location verification
-
-### Autonomous Systems
-
-- Route intelligence
-- Navigation datasets
-- Environmental perception
+Optional:
+  -c, --config FILE      YAML config file (default: config.yaml)
+  -k, --api-key KEY      Google Maps API key
+  -z, --zoom 0-5         Zoom level (default: 3 = 4096×2048 px)
+  -o, --output DIR       Output directory (default: ./output)
+  -j, --concurrent N     Parallel tile downloads (default: 8)
+      --radius METRES    Pano search radius (default: 100 m)
+      --resume           Skip already-downloaded images
+      --dry-run          Geocode + find panos only; no image downloads
+      --log-level LEVEL  DEBUG / INFO / WARNING / ERROR
+```
 
 ---
 
-## Performance
+## Zoom Level Guide
 
-| Zoom Level | Resolution | Tiles Downloaded |
-|------------|------------|------------------|
-| 0 | 512 × 512 | 1 |
-| 1 | 1024 × 512 | 2 |
-| 2 | 2048 × 1024 | 8 |
-| 3 | 4096 × 2048 | 32 |
-| 4 | 8192 × 4096 | 128 |
-| 5 | 16384 × 8192 | 512 |
+| Level | Grid | Resolution | Tiles | Est. time / pano |
+|-------|------|-----------|-------|-----------------|
+| 0 | 1×1 | 512 × 512 | 1 | < 1s |
+| 1 | 2×1 | 1024 × 512 | 2 | < 1s |
+| 2 | 4×2 | 2048 × 1024 | 8 | ~2s |
+| **3** | **8×4** | **4096 × 2048** | **32** | **~5s** |
+| 4 | 16×8 | 8192 × 4096 | 128 | ~15s |
+| 5 | 32×16 | 16384 × 8192 | 512 | ~60s |
 
-## Resume Highlights
+---
 
-This project demonstrates hands-on experience in:
+## Google API Key (Optional but Recommended)
 
-- Data Engineering
-- ETL Pipeline Development
-- MLOps Practices
-- API Integration
-- Parallel Processing
-- Computer Vision Infrastructure
-- Geospatial Analytics
-- Production-grade Python Development
-- Large-scale Dataset Generation
+A key unlocks:
+- **Google Geocoding API** — more accurate address resolution
+- **Street View Metadata API** — reliable pano lookup (metadata is **FREE**)
 
+### Getting a free key
+
+1. Go to <https://console.cloud.google.com/>
+2. Create a project → **Enable APIs** → enable:
+   - **Maps JavaScript API** (covers Street View metadata)
+   - **Geocoding API**
+3. **Credentials** → Create API Key
+4. Google gives $200/month free credit — enough for thousands of locations
+
+### Setting the key
+
+```bash
+# Option A: CLI flag
+python main.py --locations locations.csv --api-key YOUR_KEY
+
+# Option B: Environment variable
+export GOOGLE_API_KEY=YOUR_KEY
+python main.py --locations locations.csv
+
+# Option C: config.yaml
+# google_api_key: "YOUR_KEY"
+```
+
+---
+
+## Metadata CSV Schema
+
+| Column | Description |
+|--------|-------------|
+| `name` | Location label (input) |
+| `address` | Original input address |
+| `formatted_address` | Geocoded canonical address |
+| `street_name` | Reverse-geocoded road/street name |
+| `latitude` | Pano latitude (precise) |
+| `longitude` | Pano longitude (precise) |
+| `pano_id` | Google Street View panorama ID |
+| `image_filename` | e.g. `India_Gate.jpg` |
+| `image_path` | Absolute path to saved image |
+| `image_width` | Pixels |
+| `image_height` | Pixels |
+| `file_size_mb` | JPEG file size |
+| `zoom_level` | Zoom level used |
+| `capture_date` | When the pano was captured |
+| `status` | `SUCCESS` / `GEOCODE_FAILED` / `NO_STREETVIEW` / `DOWNLOAD_FAILED` / `SKIPPED` / `DRY_RUN` |
+| `error` | Error message (empty on success) |
+| `processed_at` | ISO-8601 UTC timestamp |
+
+---
+
+## Project Structure
+
+```
+streetview_pipeline/
+├── README.md
+├── config.py                 # Settings dataclass (YAML / env / CLI)
+├── config.yaml               # Default configuration
+├── locations.csv             # Sample input
+├── main.py                   # CLI entry point + orchestrator
+├── requirements.txt
+├── pipeline/
+│   ├── __init__.py
+│   ├── loader.py             # Read + validate locations CSV/TXT
+│   ├── geocoder.py           # Address → lat/lng (Google or Nominatim)
+│   ├── pano_finder.py        # lat/lng → pano_id (official or unofficial)
+│   ├── downloader.py         # Concurrent tile download with retry
+│   ├── stitcher.py           # Paste tiles into panorama image
+│   └── exporter.py           # Write metadata + failed CSVs
+└── utils/
+    ├── __init__.py
+    ├── logger.py             # Logging setup
+    └── naming.py             # Safe filename generation
+```
+
+---
+
+## Legal Notice
+
+This tool downloads publicly accessible Street View imagery for research
+and data generation purposes. Usage is subject to Google's Terms of Service:
+<https://cloud.google.com/maps-platform/terms>
+
+Do not redistribute downloaded imagery commercially without appropriate
+licensing from Google.

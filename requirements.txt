@@ -1,0 +1,14 @@
+# Street View 360° Panorama Pipeline — Python dependencies
+# Install with:  pip install -r requirements.txt
+
+# HTTP
+requests>=2.31.0
+
+# Image processing
+Pillow>=10.0.0
+
+# Geocoding (free Nominatim + optional Google)
+geopy>=2.4.0
+
+# YAML config parsing
+PyYAML>=6.0

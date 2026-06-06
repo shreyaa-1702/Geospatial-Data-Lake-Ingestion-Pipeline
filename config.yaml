@@ -1,0 +1,65 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# Street View Pipeline — Configuration
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# All fields are optional — values shown below are the defaults.
+# Uncomment and edit only what you need to change.
+#
+# CLI flags always override this file.
+# The env variable GOOGLE_API_KEY also sets google_api_key if the file
+# does not specify it.
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── Authentication ─────────────────────────────────────────────────────────────
+# Recommended.  Get a free key at https://console.cloud.google.com/
+# Enable: Geocoding API + Street View Static API (metadata lookups are FREE).
+# Without a key, Nominatim (OSM) geocoding + unofficial pano lookup are used.
+#
+# google_api_key: "YOUR_GOOGLE_MAPS_API_KEY_HERE"
+
+# ── Panorama quality ───────────────────────────────────────────────────────────
+# zoom_level controls the tile grid and final image resolution:
+#   0 →   512 ×   512 px   ( 1 tile)   — quick preview
+#   1 →  1024 ×   512 px   ( 2 tiles)
+#   2 →  2048 ×  1024 px   ( 8 tiles)
+#   3 →  4096 ×  2048 px  (32 tiles)   ← default — good balance
+#   4 →  8192 ×  4096 px  (128 tiles)  — high quality, ~4× slower
+#   5 → 16384 ×  8192 px  (512 tiles)  — maximum, very slow
+zoom_level: 3
+
+# JPEG compression quality (1–100).  95 is near-lossless.
+image_quality: 95
+
+# ── Network ────────────────────────────────────────────────────────────────────
+# Retry count for any single HTTP request.
+max_retries: 3
+
+# Base delay for exponential backoff between retries (seconds).
+retry_delay_base: 1.0
+
+# HTTP timeout per request (seconds).
+request_timeout: 20
+
+# Parallel tile downloads per panorama.  Increase for faster downloads
+# on a good connection; decrease if you hit rate limits.
+concurrent_tiles: 8
+
+# Courtesy sleep between processing different locations (seconds).
+rate_limit_delay: 0.5
+
+# ── Street View search ──────────────────────────────────────────────────────────
+# Search radius in metres — how far from the geocoded point to look for a pano.
+search_radius: 100
+
+# ── Output ─────────────────────────────────────────────────────────────────────
+output_dir: "output"
+images_subdir: "images"
+csv_filename: "metadata.csv"
+failed_csv_filename: "failed.csv"
+
+# ── Logging ────────────────────────────────────────────────────────────────────
+# DEBUG | INFO | WARNING | ERROR
+log_level: "INFO"
+
+# Set to null to disable file logging:
+log_file: "pipeline.log"
