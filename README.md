@@ -46,10 +46,12 @@ Key Features
   
 **Project Structure**
 streetview_pipeline/
+│
 ├── config.py
 ├── config.yaml
 ├── main.py
 ├── requirements.txt
+│
 ├── pipeline/
 │   ├── loader.py
 │   ├── geocoder.py
@@ -57,9 +59,11 @@ streetview_pipeline/
 │   ├── downloader.py
 │   ├── stitcher.py
 │   └── exporter.py
+│
 ├── utils/
 │   ├── logger.py
 │   └── naming.py
+│
 └── output/
     ├── images/
     ├── metadata.csv
@@ -116,10 +120,12 @@ Scene understanding
 Visual localization
 
 **Performance**
-Zoom Level	Resolution	Tiles
-0	512 × 512	1
-1	1024 × 512	2
-2	2048 × 1024	8
-3	4096 × 2048	32
-4	8192 × 4096	128
-5	16384 × 8192 512
+| Zoom Level | Resolution   | Tiles |
+| ---------- | ------------ | ----- |
+| 0          | 512 × 512    | 1     |
+| 1          | 1024 × 512   | 2     |
+| 2          | 2048 × 1024  | 8     |
+| 3          | 4096 × 2048  | 32    |
+| 4          | 8192 × 4096  | 128   |
+| 5          | 16384 × 8192 | 512   |
+
